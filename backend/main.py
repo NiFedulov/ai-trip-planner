@@ -535,7 +535,7 @@ def research_agent(state: TripState) -> TripState:
     )
     vars_ = {"destination": destination}
     
-    messages = [SystemMessage(content=prompt_t.format(**vars_))]
+    messages = [HumanMessage(content=prompt_t.format(**vars_))]
     tools = [essential_info, weather_brief, visa_brief]
     agent = llm.bind_tools(tools)
     
@@ -591,7 +591,7 @@ def budget_agent(state: TripState) -> TripState:
     )
     vars_ = {"destination": destination, "duration": duration, "budget": budget}
     
-    messages = [SystemMessage(content=prompt_t.format(**vars_))]
+    messages = [HumanMessage(content=prompt_t.format(**vars_))]
     tools = [budget_basics, attraction_prices]
     agent = llm.bind_tools(tools)
     
@@ -671,7 +671,7 @@ def local_agent(state: TripState) -> TripState:
         "context": context_text if context_text else "No curated context available.",
     }
     
-    messages = [SystemMessage(content=prompt_t.format(**vars_))]
+    messages = [HumanMessage(content=prompt_t.format(**vars_))]
     tools = [local_flavor, local_customs, hidden_gems]
     agent = llm.bind_tools(tools)
     
@@ -758,7 +758,7 @@ def itinerary_agent(state: TripState) -> TripState:
         
         # Prompt template wrapper for Arize Playground integration
         with using_prompt_template(template=prompt_t, variables=vars_, version="v1"):
-            res = llm.invoke([SystemMessage(content=prompt_t.format(**vars_))])
+            res = llm.invoke([HumanMessage(content=prompt_t.format(**vars_))])
     
     return {"messages": [SystemMessage(content=res.content)], "final": res.content}
 

@@ -86,7 +86,14 @@ def _init_llm():
 
     if os.getenv("TEST_MODE"):
         return _Fake()
-    if os.getenv("OPENAI_API_KEY"):
+    if os.getenv("ANTHROPIC_API_KEY"):
+        from langchain_anthropic import ChatAnthropic
+        return ChatAnthropic(
+            model=os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
+            temperature=0.7,
+            max_tokens=1500,
+        )
+    elif os.getenv("OPENAI_API_KEY"):
         return ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, max_tokens=1500)
     elif os.getenv("OPENROUTER_API_KEY"):
         # Use OpenRouter via OpenAI-compatible client
@@ -98,7 +105,7 @@ def _init_llm():
         )
     else:
         # Require a key unless running tests
-        raise ValueError("Please set OPENAI_API_KEY or OPENROUTER_API_KEY in your .env")
+        raise ValueError("Please set ANTHROPIC_API_KEY, OPENAI_API_KEY or OPENROUTER_API_KEY in your .env")
 
 
 llm = _init_llm()
